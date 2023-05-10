@@ -4,55 +4,51 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 
-#constantes
+# constantes
 mass = 4
 g = 9.81
 length = 10
-h = 0.01
-t_max = 10
-n =int(t_max/h) + 1
+h = 0.001
+t_max = 200
+n = int(t_max/h) + 1
 w_0 = np.sqrt(g/length)
-
-#lista con valores
-thetas = []
-omegas = []
-T_Energy = []
-K_Energy = []
-P_Energy = []
+omega_0 = 0
+theta_0 = math.radians(3)
 
 
-
-def energy(theta,omega):
+def energy(theta, omega):
     k = (mass * (length**2) * (omega**2) * 0.5)
     p = ((mass * g * length) - (mass * g * length * np.cos(theta)))
-        
-    return (k+p,k,p)
+
+    return (k+p, k, p)
 
 
-    
 def ftheta(theta):
     return (-(w_0**2) * (np.sin(theta)))
 
+
 def eu_explicito():
-    #condicion inicial
-    theta_0 = math.radians(60)
-    omega_0 = 0
+    thetas = []
+    omegas = []
+    T_Energy = []
+    K_Energy = []
+    P_Energy = []
     omegas.append(omega_0)
     thetas.append(theta_0)
-    T_Energy.append(energy(theta_0,omega_0)[0])
-    K_Energy.append(energy(theta_0,omega_0)[1])
-    P_Energy.append(energy(theta_0,omega_0)[2])
-    #metodo euler explicito
-    for i in range(1,n):
+    T_Energy.append(energy(theta_0, omega_0)[0])
+    K_Energy.append(energy(theta_0, omega_0)[1])
+    P_Energy.append(energy(theta_0, omega_0)[2])
+    # metodo euler explicito
+    for i in range(1, n):
         thetas.append(thetas[i-1] + h * omegas[i-1])
         omegas.append(omegas[i-1] + h * ftheta(thetas[i-1]))
-        T_Energy.append(energy(thetas[i],omegas[i])[0])
-        K_Energy.append(energy(thetas[i],omegas[i])[1])
-        P_Energy.append(energy(thetas[i],omegas[i])[2])
-    
+        T_Energy.append(energy(thetas[i], omegas[i])[0])
+        K_Energy.append(energy(thetas[i], omegas[i])[1])
+        P_Energy.append(energy(thetas[i], omegas[i])[2])
 
-    #plotear grafico
-    time = np.linspace(0,t_max,n)
+    # plotear grafico
+    '''
+    time = np.linspace(0, t_max, n)
     plt.plot(time, T_Energy)
     plt.plot(time, K_Energy)
     plt.plot(time, P_Energy)
@@ -60,30 +56,31 @@ def eu_explicito():
     plt.xlabel('tiempo')
     plt.ylabel('energia')
     plt.legend()
-    plt.show()
-
-
+    plt.show()'''
+    return thetas
 
 
 def eu_semi_expl():
-        #condicion inicial
-    theta_0 = math.radians(60)
-    omega_0 = 0
+    thetas = []
+    omegas = []
+    T_Energy = []
+    K_Energy = []
+    P_Energy = []
     omegas.append(omega_0)
     thetas.append(theta_0)
-    T_Energy.append(energy(theta_0,omega_0)[0])
-    K_Energy.append(energy(theta_0,omega_0)[1])
-    P_Energy.append(energy(theta_0,omega_0)[2])
-    #metodo euler explicito
-    for i in range(1,n):
+    T_Energy.append(energy(theta_0, omega_0)[0])
+    K_Energy.append(energy(theta_0, omega_0)[1])
+    P_Energy.append(energy(theta_0, omega_0)[2])
+    # metodo euler explicito
+    for i in range(1, n):
         omegas.append(omegas[i-1] + h * ftheta(thetas[i-1]))
         thetas.append(thetas[i-1] + h * omegas[i])
-        
-        T_Energy.append(energy(thetas[i],omegas[i])[0])
-        K_Energy.append(energy(thetas[i],omegas[i])[1])
-        P_Energy.append(energy(thetas[i],omegas[i])[2])
-        #plotear grafico
-    time = np.linspace(0,t_max,n)
+
+        T_Energy.append(energy(thetas[i], omegas[i])[0])
+        K_Energy.append(energy(thetas[i], omegas[i])[1])
+        P_Energy.append(energy(thetas[i], omegas[i])[2])
+        # plotear grafico
+    '''time = np.linspace(0, t_max, n)
     plt.plot(time, T_Energy)
     plt.plot(time, K_Energy)
     plt.plot(time, P_Energy)
@@ -91,23 +88,24 @@ def eu_semi_expl():
     plt.xlabel('tiempo')
     plt.ylabel('energia')
     plt.legend()
-    plt.show()
-    #return thetas
+    plt.show()'''
+    return thetas
 
 
 def rungekutta_4():
-        #condicion inicial
-    theta_0 = math.radians(60)
-    omega_0 = 0
+    thetas = []
+    omegas = []
+    T_Energy = []
+    K_Energy = []
+    P_Energy = []
     omegas.append(omega_0)
     thetas.append(theta_0)
-    T_Energy.append(energy(theta_0,omega_0)[0])
-    K_Energy.append(energy(theta_0,omega_0)[1])
-    P_Energy.append(energy(theta_0,omega_0)[2])
-    
+    T_Energy.append(energy(theta_0, omega_0)[0])
+    K_Energy.append(energy(theta_0, omega_0)[1])
+    P_Energy.append(energy(theta_0, omega_0)[2])
 
-    for i in range(1,n):
-        #metodo runge_kutta
+    for i in range(1, n):
+        # metodo runge_kutta
         k_1 = h * ftheta(thetas[i-1])
         k_2 = h * ftheta(thetas[i-1] + 0.5 * k_1 * h)
         k_3 = h * ftheta(thetas[i-1] + 0.5 * k_2 * h)
@@ -115,22 +113,20 @@ def rungekutta_4():
 
         angle = omegas[i-1] + ((k_1 + (2 * k_2) + (2 * k_3) + k_4) * (1/6))
         omegas.append(angle)
-        
 
         k_1 = h * omegas[i-1]
-        k_2 = h * (omegas[i-1] + k_1* 0.5)
-        k_3 =  h * (omegas[i-1] + k_2* 0.5)
+        k_2 = h * (omegas[i-1] + k_1 * 0.5)
+        k_3 = h * (omegas[i-1] + k_2 * 0.5)
         k_4 = h * (omegas[i-1] + k_3)
 
         angle = thetas[i-1] + ((k_1 + (2 * k_2) + (2 * k_3) + k_4) * (1/6.0))
         thetas.append(angle)
-        
-        #calculo de energia
-        T_Energy.append(energy(thetas[i],omegas[i])[0])
-        K_Energy.append(energy(thetas[i],omegas[i])[1])
-        P_Energy.append(energy(thetas[i],omegas[i])[2])
-    #return thetas
-    time = np.linspace(0,t_max,n)
+
+        # calculo de energia
+        T_Energy.append(energy(thetas[i], omegas[i])[0])
+        K_Energy.append(energy(thetas[i], omegas[i])[1])
+        P_Energy.append(energy(thetas[i], omegas[i])[2])
+    '''time = np.linspace(0, t_max, n)
     plt.plot(time, T_Energy)
     plt.plot(time, K_Energy)
     plt.plot(time, P_Energy)
@@ -138,11 +134,12 @@ def rungekutta_4():
     plt.xlabel('tiempo')
     plt.ylabel('energia')
     plt.legend()
-    plt.show()
+    plt.show()'''
+    return thetas
 
 
-eu_semi_expl()
-angle = rungekutta_4()
+# eu_semi_expl()
+# angle = rungekutta_4()
 '''
     #plotear grafico
     time = np.linspace(0,t_max,n)
@@ -155,7 +152,7 @@ angle = rungekutta_4()
 '''
 
 # animacion
-fig = plt.figure(figsize=(6, 6))
+'''fig = plt.figure(figsize=(6, 6))
 ax = plt.subplot(1, 1, 1)  # inicializar la figura y el eje
 ax.set_xlim(-1.5*length, 1.5*length)
 ax.set_ylim(-1.5*length, 1.5*length)
@@ -163,14 +160,13 @@ ax.set_aspect('equal')
 # inicializar el objeto de línea para la soga
 rope, = ax.plot([], [], 'k-', lw=1)
 # inicializar el objeto de línea para la masa
-mass, = ax.plot([], [], 'o-', color='blue', lw=2)
+mass, = ax.plot([], [], 'o-', color='blue', lw=2)'''
 
 
 def init():
     rope.set_data([], [])
     mass.set_data([], [])
     return rope, mass,
-
 
 
 def animate(i):
@@ -184,9 +180,9 @@ def animate(i):
     return rope, mass,
 
 
-anim = FuncAnimation(fig, animate, init_func=init,
-                               frames=10000, interval=1, blit=True)
-plt.show()
+'''anim = FuncAnimation(fig, animate, init_func=init,
+                     frames=10000, interval=1, blit=True)
+plt.show()'''
 
 '''
 # inicializar la figura y el eje
@@ -221,3 +217,38 @@ plt.show()
 
 
 '''
+
+
+def plot_trayectoria():
+    time = np.linspace(0.0, t_max, n)
+    theta = theta_0 * np.cos(w_0*time)
+    theta2 = eu_explicito()
+    theta3 = eu_semi_expl()
+    theta4 = rungekutta_4()
+
+    plt.plot(time, theta, label='Función analítica')
+    plt.plot(time, theta2, label='Aproximación de euler')
+    plt.title('Theta analítica vs Euler explícito')
+    plt.xlabel('tiempo')
+    plt.ylabel('theta')
+    plt.legend(loc='lower left')
+    plt.show()
+
+    plt.plot(time, theta, label='Función analítica')
+    plt.plot(time, theta3, label='Aproximación de euler semi-explícito')
+    plt.title('Theta analítica vs theta euler semi-explícito')
+    plt.xlabel('tiempo')
+    plt.ylabel('theta')
+    plt.legend(loc='lower left')
+    plt.show()
+
+    plt.plot(time, theta, label='Función analítica')
+    plt.plot(time, theta4, label='Aproximación de RK4')
+    plt.title('Theta analítica vs RK4')
+    plt.xlabel('tiempo')
+    plt.ylabel('theta')
+    plt.legend(loc='lower left')
+    plt.show()
+
+
+plot_trayectoria()
