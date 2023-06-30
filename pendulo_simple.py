@@ -9,11 +9,11 @@ mass = 4
 g = 9.81
 length = 10
 h = 0.001
-t_max = 200
+t_max = 20
 n = int(t_max/h) + 1
 w_0 = np.sqrt(g/length)
 omega_0 = 0
-theta_0 = math.radians(3)
+theta_0 = math.radians(6)
 
 
 def energy(theta, omega):
@@ -24,7 +24,7 @@ def energy(theta, omega):
 
 
 def ftheta(theta):
-    return (-(w_0**2) * (np.sin(theta)))
+    return (-(w_0) * (np.sin(theta)))
 
 
 def eu_explicito():
@@ -57,7 +57,7 @@ def eu_explicito():
     plt.ylabel('energia')
     plt.legend()
     plt.show()'''
-    return thetas
+    return thetas, T_Energy, K_Energy, P_Energy
 
 
 def eu_semi_expl():
@@ -89,7 +89,7 @@ def eu_semi_expl():
     plt.ylabel('energia')
     plt.legend()
     plt.show()'''
-    return thetas
+    return thetas, T_Energy, K_Energy, P_Energy
 
 
 def rungekutta_4():
@@ -135,11 +135,9 @@ def rungekutta_4():
     plt.ylabel('energia')
     plt.legend()
     plt.show()'''
-    return thetas
+    return thetas, T_Energy, K_Energy, P_Energy
 
 
-# eu_semi_expl()
-# angle = rungekutta_4()
 '''
     #plotear grafico
     time = np.linspace(0,t_max,n)
@@ -222,9 +220,9 @@ plt.show()
 def plot_trayectoria():
     time = np.linspace(0.0, t_max, n)
     theta = theta_0 * np.cos(w_0*time)
-    theta2 = eu_explicito()
-    theta3 = eu_semi_expl()
-    theta4 = rungekutta_4()
+    theta2 = eu_explicito()[0]
+    theta3 = eu_semi_expl()[0]
+    theta4 = rungekutta_4()[0]
 
     plt.plot(time, theta, label='Función analítica')
     plt.plot(time, theta2, label='Aproximación de euler')
@@ -235,8 +233,8 @@ def plot_trayectoria():
     plt.show()
 
     plt.plot(time, theta, label='Función analítica')
-    plt.plot(time, theta3, label='Aproximación de euler semi-explícito')
-    plt.title('Theta analítica vs theta euler semi-explícito')
+    plt.plot(time, theta3, label='Aproximación de euler semi-implícito')
+    plt.title('Theta analítica vs theta euler semi-implícito')
     plt.xlabel('tiempo')
     plt.ylabel('theta')
     plt.legend(loc='lower left')
@@ -244,11 +242,49 @@ def plot_trayectoria():
 
     plt.plot(time, theta, label='Función analítica')
     plt.plot(time, theta4, label='Aproximación de RK4')
-    plt.title('Theta analítica vs RK4')
+    plt.title('Theta analítica vs theta RK4')
     plt.xlabel('tiempo')
     plt.ylabel('theta')
     plt.legend(loc='lower left')
     plt.show()
 
 
-plot_trayectoria()
+def plot_energia():
+
+    energy1 = eu_explicito()
+    energy2 = eu_semi_expl()
+    energy3 = rungekutta_4()
+
+    '''time = np.linspace(0, t_max, n)
+    plt.plot(time, energy1[1], label='Energía Total')
+    plt.plot(time, energy1[2], label='Energía Cinética')
+    plt.plot(time, energy1[3], label='Energía Potencial')
+    plt.title('Energia sobre el tiempo, Euler explícito')
+    plt.xlabel('tiempo')
+    plt.ylabel('energia')
+    plt.legend(loc='lower left')
+    plt.show()'''
+
+    time = np.linspace(0, t_max, n)
+    plt.plot(time, energy2[1], label='Eergía Total')
+    plt.plot(time, energy2[2], label='Energía Cinética')
+    plt.plot(time, energy2[3], label='Energía Potencial')
+    plt.title('Energia sobre el tiempo, Euler semi-implícito')
+    plt.xlabel('tiempo')
+    plt.ylabel('energia')
+    plt.legend(loc='lower left')
+    plt.show()
+
+    '''time = np.linspace(0, t_max, n)
+    plt.plot(time, energy3[1], label='Energía Total')
+    plt.plot(time, energy3[2], label='Energía Cinética')
+    plt.plot(time, energy3[3], label='Energía Potencial')
+    plt.title('Energia sobre el tiempo, RK4')
+    plt.xlabel('tiempo')
+    plt.ylabel('energia')
+    plt.legend(loc='lower left')
+    plt.show()'''
+
+
+# plot_trayectoria()
+plot_energia()
